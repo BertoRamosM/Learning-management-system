@@ -37,6 +37,12 @@ model Course {
 
 }
 
+model Category{
+  id String @id @default(uuid())
+  name String @unique
+  course Course[]
+}
+
 
 model Attachments{
   id String @id @default(uuid())
@@ -45,4 +51,7 @@ model Attachments{
 
   courseId String
   course Course @relation(fields:[courseId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updateAt DateTime @updatedAt
 }
