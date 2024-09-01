@@ -12,12 +12,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 interface DescriptionFormProps {
   initialData: {
@@ -74,7 +75,16 @@ export const DescriptionForm = ({ initialData, courseId }: DescriptionFormProps)
           )}
         </Button>
       </div>
-      {!isEditing && <p className="text-sm mt-2">{initialData.description}</p>}
+      {!isEditing && (
+        <p
+          className={cn(
+            "text-sm mt-2",
+            !initialData.description && "text-slate-500 italic"
+          )}
+        >
+          {initialData.description || "No description"}
+        </p>
+      )}
 
       {isEditing && (
         <Form {...form}>
@@ -88,9 +98,9 @@ export const DescriptionForm = ({ initialData, courseId }: DescriptionFormProps)
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
+                    <Textarea
                       disabled={isSubmitting}
-                      placeholder="e.g. 'Advanced web development"
+                      placeholder="e.g. 'This course is about...'"
                       {...field}
                     />
                   </FormControl>
