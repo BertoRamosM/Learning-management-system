@@ -2,7 +2,7 @@ import { db } from "@/lib/db"
 import { auth } from "@clerk/nextjs/server"
 import { NextResponse } from "next/server"
 
-export async function Post(
+export async function POST(
   req: Request,
 ) {
   try {
@@ -22,7 +22,7 @@ export async function Post(
 
     return NextResponse.json(course)
 
-    
+
   } catch (error) {
     console.log("[COURSES]", error)
     return new NextResponse("Internal Error", {status: 500})
