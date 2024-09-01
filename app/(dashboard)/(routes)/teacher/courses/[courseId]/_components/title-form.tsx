@@ -14,6 +14,8 @@ import {
 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { Pencil } from "lucide-react"
+import { useState } from "react"
 
 interface TitleFormProps{
   initialData: {
@@ -29,6 +31,8 @@ const formSchema = z.object({
 })
 
 export const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
+
+  const [isEditing, setIsEditing] = useState(false)
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -41,10 +45,21 @@ export const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
     console.log(values)
   }
 
-  
+
   return (
-    <div className="">
-      Title Form
+    <div className="mt-6 border bg-slate-100 rounded-md p-4">
+      <div className="font-medium flex items-center justify-between">
+        Course title
+        <Button variant="ghost">
+          {isEditing && <>Cancel</>}
+          {!isEditing && (
+            <>
+              <Pencil className="h-4 w-4 mr-2" />
+              Edit title
+            </>
+          )}
+        </Button>
+      </div>
     </div>
-  )
+  );
 }
