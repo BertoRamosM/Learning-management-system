@@ -1,4 +1,4 @@
-import { LucideIcon } from "lucide-react";
+import { Icon, LucideIcon } from "lucide-react";
 
 import {cva, type VariantProps} from "class-variance-authority"
 
@@ -27,4 +27,40 @@ const backgroundVariants = cva(
     }
   }
 )
+
+const iconVariants = cva(
+  "",
+  {
+    variants: {
+      variant: {
+        default: "text-sky-700",
+        success: "text-emerald-700"
+      },
+      size: {
+        default: "h-8 w-8",
+        sm: "h-4 w-4",
+      }
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    }
+  }
+)
+
+type BackGroundVariantsProps = VariantProps<typeof backgroundVariants>
+
+type IconVariantsProps = VariantProps<typeof iconVariants>;
+
+interface IconBadgeProps extends BackGroundVariantsProps, IconVariantsProps {
+  icon: LucideIcon;
+}
+
+export const IconBadge = ({
+  icon: Icon,
+  variant,
+  size,
+}: IconBadgeProps) => {
+  
+}
 
