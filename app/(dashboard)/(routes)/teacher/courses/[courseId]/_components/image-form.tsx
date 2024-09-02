@@ -19,37 +19,28 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Course } from "@prisma/client";
 
-interface DescriptionFormProps {
+interface ImageFormProps {
   initialData: {
-    description: string | null;
+    image: string;
   };
   courseId: string;
 }
 
-
 const formSchema = z.object({
-  description: z
-    .string()
-    .min(1, {
-      message: "Description is required",
-    })
-    .nullable()
-    .transform((value) => value ?? ""),
+  description: z.string().min(1, {
+    message: "Description is required",
+  }),
 });
 
-
-export const DescriptionForm = ({ initialData, courseId }: DescriptionFormProps) => {
+export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
 
- const form = useForm<z.infer<typeof formSchema>>({
-   resolver: zodResolver(formSchema),
-   defaultValues: {
-     description: initialData?.description ?? "",
-   },
- });
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: initialData,
+  });
 
   const { isSubmitting, isValid } = form.formState;
 
@@ -88,10 +79,10 @@ export const DescriptionForm = ({ initialData, courseId }: DescriptionFormProps)
         <p
           className={cn(
             "text-sm mt-2",
-            !initialData.description && "text-slate-500 italic"
+            !initialData.image && "text-slate-500 italic"
           )}
         >
-          {initialData.description || "No description"}
+          {initialData.image || "No description"}
         </p>
       )}
 
