@@ -51,16 +51,16 @@ export const Combobox = ({
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search framework..." />
+          <CommandInput placeholder="Search option..." />
           <CommandList>
-            <CommandEmpty>No framework found.</CommandEmpty>
+            <CommandEmpty>No option found.</CommandEmpty>
             <CommandGroup>
               {options.map((option) => (
                 <CommandItem
                   key={option.value}
                   value={option.value}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
+                  onSelect={() => {
+                    onChange(option.value === value ? "" : option.value);
                     setOpen(false);
                   }}
                 >
@@ -70,7 +70,7 @@ export const Combobox = ({
                       value === option.value ? "opacity-100" : "opacity-0"
                     )}
                   />
-                  {framework.label}
+                  {option.label}
                 </CommandItem>
               ))}
             </CommandGroup>
