@@ -22,9 +22,7 @@ import { cn } from "@/lib/utils";
 import { Course } from "@prisma/client";
 
 interface DescriptionFormProps {
-  initialData: {
-    description: string | null;
-  };
+  initialData: Course
   courseId: string;
 }
 
