@@ -94,7 +94,6 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
           )}
         </Button>
       </div>
-      
 
       {isCreating && (
         <Form {...form}>
@@ -110,7 +109,7 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
                   <FormControl>
                     <Input
                       disabled={isSubmitting}
-                      placeholder="e.g. 'Introduction of the course'" 
+                      placeholder="e.g. 'Introduction of the course'"
                       {...field}
                     />
                   </FormControl>
@@ -118,29 +117,35 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
                 </FormItem>
               )}
             />
-            
-              <Button disabled={!isValid || isSubmitting} type="submit">
-                Create
-              </Button>
+
+            <Button disabled={!isValid || isSubmitting} type="submit">
+              Create
+            </Button>
           </form>
         </Form>
       )}
 
       {!isCreating && (
-        <div className={cn("text-sm mt-2",!initialData.chapters.length && "text-slate-500 italic")}>
+        <div
+          className={cn(
+            "text-sm mt-2",
+            !initialData.chapters.length && "text-slate-500 italic"
+          )}
+        >
           {!initialData.chapters.length && "No chapters yet"}
-          
-          <ChaptersList
-            onEdit={() => { }}
-            onReorder={() => { }}
-            items={initialData.chapters || []}
 
+          <ChaptersList
+            onEdit={() => {}}
+            onReorder={onReorder}
+            items={initialData.chapters || []}
           />
         </div>
       )}
 
       {!isCreating && (
-        <p className="text-xs text-muted-foreground mt-4">Drag and drop to reorder chapters</p>
+        <p className="text-xs text-muted-foreground mt-4">
+          Drag and drop to reorder chapters
+        </p>
       )}
     </div>
   );
