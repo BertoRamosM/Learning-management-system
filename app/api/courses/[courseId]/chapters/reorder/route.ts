@@ -37,6 +37,10 @@ export async function PUT(req: Request, { params }: { params: { courseId: string
       })
     }
 
+    return new NextResponse("Success", {
+      status: 200,
+    })
+
 
   } catch (error) {
     console.log("[REORDER CHAPTERS]", error);
