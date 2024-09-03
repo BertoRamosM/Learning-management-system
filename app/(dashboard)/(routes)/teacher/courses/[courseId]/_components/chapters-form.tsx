@@ -14,7 +14,7 @@ import {
 
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
+import { Pencil, PlusCircle } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -28,34 +28,33 @@ interface ChaptersFormProps {
 
 
 const formSchema = z.object({
-  Chapters: z
-    .string()
-    .min(1, {
-      message: "Description is required",
-    })
-    .nullable()
-    .transform((value) => value ?? ""),
+  title: z.string().min(1),
 });
 
 
 export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
   const router = useRouter();
-  const [isEditing, setIsEditing] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      description: initialData?.description ?? "",
+      title: "",
     },
   });
+
+  const toggleCreating = () => {
+    setIsCreating((current) => !current);
+  };
 
   const { isSubmitting, isValid } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.patch(`/api/courses/${courseId}`, values);
-      toast.success("Course updated");
-      toggleEdit();
+      await axios.post(`/api/courses/${courseId}/chapters`, values);
+      toast.success("Chapter created");
+      toggleCreating();
       router.refresh();
       router;
     } catch (error) {
@@ -63,26 +62,24 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
     }
   };
 
-  const toggleEdit = () => {
-    setIsEditing((current) => !current);
-  };
+  
 
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        Course description
-        <Button variant="ghost" onClick={toggleEdit}>
-          {isEditing ? (
+        Course chapters
+        <Button variant="ghost" onClick={toggleCreating}>
+          {isCreating ? (
             <>Cancel</>
           ) : (
             <>
-              <Pencil className="h-4 w-4 mr-2" />
-              Edit description
+              <PlusCircle className="h-4 w-4 mr-2" />
+              Add a chapter
             </>
           )}
         </Button>
       </div>
-      {!isEditing && (
+      {!isCreating && (
         <p
           className={cn(
             "text-sm mt-2",
@@ -93,7 +90,7 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
         </p>
       )}
 
-      {isEditing && (
+      {isCreating && (
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -101,7 +98,7 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
           >
             <FormField
               control={form.control}
-              name="description"
+              name="title"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
