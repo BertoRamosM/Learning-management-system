@@ -80,10 +80,10 @@ export const PriceForm = ({ initialData, courseId }: PriceFormProps) => {
         <p
           className={cn(
             "text-sm mt-2",
-            !initialData.description && "text-slate-500 italic"
+            !initialData.price && "text-slate-500 italic"
           )}
         >
-          {initialData.description || "No description"}
+          {initialData.price || "No price"}
         </p>
       )}
 
@@ -100,8 +100,10 @@ export const PriceForm = ({ initialData, courseId }: PriceFormProps) => {
                 <FormItem>
                   <FormControl>
                     <Input
+                      type="number"
+                      step="0.01"
                       disabled={isSubmitting}
-                      placeholder="e.g. 'This course is about...'"
+                      placeholder="Set a price for your course"
                       {...field}
                     />
                   </FormControl>
