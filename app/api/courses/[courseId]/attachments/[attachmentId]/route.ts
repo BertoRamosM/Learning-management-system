@@ -21,13 +21,14 @@ export async function DELETE(req: Request, { params }: { params: { courseId: str
       return new NextResponse("Unautherized", {status: 401})
     }
 
-    await db.attachment.delete({
+    const attachment = await db.attachment.delete({
       where: {
+        courseId: params.attachmentId,
         id: params.attachmentId,
       }
     })
 
-    return NextResponse.json({})
+    return NextResponse.json(attachment)
     
   }catch (error) {
     console.log("[ATTACHMENTS]", error)
