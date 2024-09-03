@@ -20,18 +20,17 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Course } from "@prisma/client";
+import { Combobox } from "@/components/ui/combobox";
 
 interface CategoryFormProps {
-  initialData: Course
+  initialData: Course;
   courseId: string;
-  options: {label: string, value: string}[]
+  options: { label: string; value: string }[];
 }
 
-
 const formSchema = z.object({
-  categoryId: z.string().min(1)
+  categoryId: z.string().min(1),
 });
-
 
 export const CategoryForm = ({
   initialData,
@@ -66,6 +65,10 @@ export const CategoryForm = ({
     setIsEditing((current) => !current);
   };
 
+  const selectedOption = options.find(
+    (option) => option.value === initialData.categoryId
+  );
+
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
@@ -88,7 +91,7 @@ export const CategoryForm = ({
             !initialData.categoryId && "text-slate-500 italic"
           )}
         >
-          {initialData.categoryId || "No description"}
+          {selectedOption?.label || "No category"}
         </p>
       )}
 
@@ -104,10 +107,8 @@ export const CategoryForm = ({
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Textarea
-                      disabled={isSubmitting}
-                      placeholder="e.g. 'This course is about...'"
-                      {...field}
+                    <Combobox
+                      options={options} {...field} 
                     />
                   </FormControl>
                   <FormMessage />
