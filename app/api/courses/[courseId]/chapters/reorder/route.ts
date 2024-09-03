@@ -24,10 +24,22 @@ export async function PUT(req: Request, { params }: { params: { courseId: string
       return new NextResponse("Unautherized", {
         status: 401,
       });
-
     }
+
+    for(let item of list) {
+      await db.chapter.update({
+        where: {
+          id: item.id,
+        },
+        data: {
+          position: item.position,
+        }
+      })
+    }
+
+
   } catch (error) {
-    console.log("[CHAPTERS]", error);
+    console.log("[REORDER CHAPTERS]", error);
     return new NextResponse("Internal Error", {
       status: 500,
     })
