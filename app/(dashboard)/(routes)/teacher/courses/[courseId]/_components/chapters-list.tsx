@@ -11,7 +11,8 @@ import {
 } from "@hello-pangea/dnd";
 
 import { cn } from "@/lib/utils";
-import {  Grip } from "lucide-react";
+import {  Grip, Pencil } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface ChaptersListProps {
   items: Chapter[];
@@ -76,14 +77,23 @@ export const ChaptersList = ({
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                   >
-                    <Grip className="mr-2" />
+                    <Grip className="h-5 w-5" />
                     <span>{chapter.title}</span>
-                    <button
-                      className="ml-auto text-blue-600 hover:underline"
-                      onClick={() => onEdit(chapter.id)}
-                    >
-                      Edit
-                    </button>
+
+                    <div className="ml-auto pr-2 flex items-center gap-x-2">
+                      {chapter.isFree && (
+                        <Badge>Free</Badge>
+                      )}
+                      <Badge className={cn(
+                        "bg-slate-500",
+                        chapter.isPublished && "bg-sky-700"
+                      )}>
+                        {chapter.isPublished ? "Published" : "Draft"}
+                      </Badge>
+
+
+                      <Pencil onClick={() => onEdit(chapter.id)}  className="h-4 w-4 cursor-pointer hover:opacity-75 transition" />
+                      </div>
                   </div>
                 )}
               </Draggable>
