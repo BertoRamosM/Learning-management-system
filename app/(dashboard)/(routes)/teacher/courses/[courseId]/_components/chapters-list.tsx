@@ -1,6 +1,7 @@
 'use client'
 
 import { Chapter } from "@prisma/client"
+import { useEffect, useState } from "react"
 
 interface ChaptersListProps {
   items: Chapter[]
@@ -10,6 +11,21 @@ interface ChaptersListProps {
 
 
 export const ChaptersList = ({items, onEdit, onReorder} : ChaptersListProps) => {
+
+  const [isMounted, setIsMounted] = useState(false)
+  const [chapters, setChapters] = useState(items)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  useEffect(() => {
+    setChapters(items)
+  }, [items])
+  
+  if(!isMounted) return null
+
+
   return (
     <div>
       
