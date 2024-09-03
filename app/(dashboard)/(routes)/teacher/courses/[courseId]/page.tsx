@@ -3,7 +3,12 @@ import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { IconBadge } from "@/components/icon-badge";
-import { CircleDollarSign, File, LayoutDashboard, ListChecks } from "lucide-react";
+import {
+  CircleDollarSign,
+  File,
+  LayoutDashboard,
+  ListChecks,
+} from "lucide-react";
 import { TitleForm } from "./_components/title-form";
 import { DescriptionForm } from "./_components/description-form.tsx";
 import { ImageForm } from "./_components/image-form";
@@ -28,15 +33,22 @@ const CourseIdPage = async ({
     where: {
       id: params.courseId,
     },
+    include: {
+      attachments: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+    },
   });
 
   const categories = await db.category.findMany({
     orderBy: {
       name: "asc",
-    }
-  })
+    },
+  });
 
-  console.log(categories)
+  console.log(categories);
 
   if (!course) {
     return redirect("/");
