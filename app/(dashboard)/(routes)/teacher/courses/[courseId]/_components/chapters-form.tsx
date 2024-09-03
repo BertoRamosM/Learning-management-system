@@ -12,17 +12,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Pencil, PlusCircle } from "lucide-react";
+import {  PlusCircle } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Course } from "@prisma/client";
+import { Chapter, Course } from "@prisma/client";
+import { Input } from "@/components/ui/input";
 
 interface ChaptersFormProps {
-  initialData: Course
+  initialData: Course & {chapters: Chapter[]}
   courseId: string;
 }
 
@@ -79,16 +79,7 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
           )}
         </Button>
       </div>
-      {!isCreating && (
-        <p
-          className={cn(
-            "text-sm mt-2",
-            !initialData.description && "text-slate-500 italic"
-          )}
-        >
-          {initialData.description || "No description"}
-        </p>
-      )}
+      
 
       {isCreating && (
         <Form {...form}>
@@ -102,9 +93,9 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Textarea
+                    <Input
                       disabled={isSubmitting}
-                      placeholder="e.g. 'This course is about...'"
+                      placeholder="e.g. 'Introduction of the course'" 
                       {...field}
                     />
                   </FormControl>
@@ -112,13 +103,22 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
                 </FormItem>
               )}
             />
-            <div className="flex items-center gap-x-2">
+            
               <Button disabled={!isValid || isSubmitting} type="submit">
-                Save
+                Create
               </Button>
-            </div>
           </form>
         </Form>
+      )}
+
+      {!isCreating && (
+        <div className={cn("text-sm mt-2",!initialData.chapers.length && "text-slate-500 italic")}>
+          No chapters yet
+        </div>
+      )}
+
+      {!isCreating && (
+        <p className="text-xs text-muted-foreground mt-4">Drag and drop to reorder chapters</p>
       )}
     </div>
   );
