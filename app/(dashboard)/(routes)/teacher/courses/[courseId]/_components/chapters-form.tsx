@@ -112,7 +112,7 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
       )}
 
       {!isCreating && (
-        <div className={cn("text-sm mt-2",!initialData.chapers.length && "text-slate-500 italic")}>
+        <div className={cn("text-sm mt-2",!initialData.chapters.length && "text-slate-500 italic")}>
           No chapters yet
         </div>
       )}
