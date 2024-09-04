@@ -45,15 +45,16 @@ export const ChapterTitleForm = ({ initialData, courseId, chapterId }: ChapterTi
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-     await axios.patch(
-       `/api/courses/${courseId}/chapters/${chapterId}`,
-       values
-     );
+    
+      await axios.patch(
+        `/api/courses/${courseId}/chapters/${chapterId}`,
+        values
+      );
 
-      toast.success("Chapter updated")
-      toggleEdit()
-      router.refresh()
-      router
+      toast.success("Chapter updated");
+      toggleEdit();
+      router.refresh();
+      router;
     } catch (error) {
       toast.error("Something went wrong")
     }
