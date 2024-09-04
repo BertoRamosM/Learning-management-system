@@ -12,7 +12,6 @@ export async function PATCH(
   
 
     const { isPublished, ...values } = await req.json();
-    console.log("Values to update:", values);
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
