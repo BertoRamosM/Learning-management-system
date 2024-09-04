@@ -22,7 +22,7 @@ import { Course } from "@prisma/client";
 import { Editor } from "@/components/editor";
 
 interface ChapterDescriptionFormProps {
-  initialData: Course
+  initialData: Chapter
   courseId: string;
   chapterId: string;
 }
