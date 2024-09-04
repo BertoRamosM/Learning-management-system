@@ -4,12 +4,11 @@ import axios from "axios";
 
 
 import { Button } from "@/components/ui/button";
-import { ImageIcon, Pencil, PlusCircle } from "lucide-react";
+import {  Pencil, PlusCircle, VideoIcon } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { Chapter, Course, MuxData } from "@prisma/client";
-import Image from "next/image";
+import { Chapter,  MuxData } from "@prisma/client";import Image from "next/image";
 import { FileUpload } from "@/components/file-upload";
 
 interface ChapterVideoProps {
@@ -52,14 +51,14 @@ export const ChapterVideoForm = ({ initialData, courseId, chapterId }: ChapterVi
           {!isEditing && !initialData.videoUrl && (
             <>
               <PlusCircle className="h-4 w-4 mr-2" />
-              Add an image
+              Add an video
             </>
           )}
 
           {!isEditing && initialData.videoUrl && (
             <>
               <Pencil className="h-4 w-4 mr-2" />
-              Edit image
+              Edit video
             </>
           )}
         </Button>
@@ -67,16 +66,11 @@ export const ChapterVideoForm = ({ initialData, courseId, chapterId }: ChapterVi
       {!isEditing &&
         (!initialData.videoUrl ? (
           <div className="flex items-center justify-center h-60 bg-slate-200 rounded-md">
-            <ImageIcon className="h-10 w-10 text-slate-500" />
+            <VideoIcon className="h-10 w-10 text-slate-500" />
           </div>
         ) : (
           <div className="relative aspect-video mt-2">
-            <Image
-              alt="Upload"
-              fill
-              className="object-cover rounded-md"
-              src={initialData.videoUrl}
-            />
+           Video uploaded!
           </div>
         ))}
 
@@ -92,8 +86,13 @@ export const ChapterVideoForm = ({ initialData, courseId, chapterId }: ChapterVi
           />
 
           <div className="text-xs text-muted-foreground mt-4">
-            16:9 aspect ratio recommended
+            Upload this chapter&apos;s video
           </div>
+        </div>
+      )}
+      {initialData.videoUrl && !isEditing && (
+        <div className="text-xs text-muted-foreground mt-2">
+          Videos can take a few minutes to process. Please be patient. Refresh the page if does not appear.
         </div>
       )}
     </div>
