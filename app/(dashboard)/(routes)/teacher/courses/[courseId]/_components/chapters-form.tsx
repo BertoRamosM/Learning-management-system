@@ -77,6 +77,11 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
     }
   };
 
+
+  const onEdit = (id: string) => {
+  router.push(`/teacher/courses/${courseId}/chapters/${id}`);
+  };
+
   
 
   return (
@@ -141,7 +146,7 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
           {!initialData.chapters.length && "No chapters yet"}
 
           <ChaptersList
-            onEdit={() => {}}
+            onEdit={onEdit}
             onReorder={onReorder}
             items={initialData.chapters || []}
           />
