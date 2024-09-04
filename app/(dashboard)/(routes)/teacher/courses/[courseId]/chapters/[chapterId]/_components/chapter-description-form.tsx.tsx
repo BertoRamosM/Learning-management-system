@@ -18,11 +18,12 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Course } from "@prisma/client";
+import { Chapter } from "@prisma/client";
 import { Editor } from "@/components/editor";
+import { Preview } from "@/components/preview";
 
 interface ChapterDescriptionFormProps {
-  initialData: Chapter
+  initialData: Chapter;
   courseId: string;
   chapterId: string;
 }
@@ -84,14 +85,15 @@ export const ChapterDescriptionForm = ({
         </Button>
       </div>
       {!isEditing && (
-        <p
+        <div
           className={cn(
             "text-sm mt-2",
             !initialData.description && "text-slate-500 italic"
           )}
         >
-          {initialData.description || "No description"}
-        </p>
+          {initialData.description && "No description"}
+          {initialData.description && <Preview value={initialData.description} />}
+        </div>
       )}
 
       {isEditing && (
