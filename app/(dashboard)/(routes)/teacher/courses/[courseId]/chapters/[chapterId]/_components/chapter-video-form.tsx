@@ -8,8 +8,8 @@ import {  Pencil, PlusCircle, VideoIcon } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { Chapter,  MuxData } from "@prisma/client";import Image from "next/image";
 import { FileUpload } from "@/components/file-upload";
+import { Chapter, MuxData } from "@prisma/client";
 
 interface ChapterVideoProps {
   initialData: Chapter & { muxData?: MuxData | null};
@@ -51,7 +51,7 @@ export const ChapterVideoForm = ({ initialData, courseId, chapterId }: ChapterVi
           {!isEditing && !initialData.videoUrl && (
             <>
               <PlusCircle className="h-4 w-4 mr-2" />
-              Add an video
+              Add a video
             </>
           )}
 
