@@ -58,6 +58,26 @@ export async function DELETE(
         id: params.chapterId,
       }
     })
+
+    const publishedChapters = await db.chapter.findMany({
+      where: {
+        courseId: params.courseId,
+        isPublished: true,
+      }
+    });
+
+    if(!publishedChapters.length) {
+      await db.course.update({
+        where: {
+          id: params.courseId,
+        },
+        data: {
+          isPublished: false,
+        },
+      });
+    }
+
+    return NextResponse.json(deletedChapter);
     
   }catch (error) {
     console.log("[CHAPTERS_ID_ERROR]", error);
