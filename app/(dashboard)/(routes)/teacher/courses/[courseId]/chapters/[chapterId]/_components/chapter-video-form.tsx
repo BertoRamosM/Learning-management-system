@@ -1,6 +1,7 @@
 "use client";
 import * as z from "zod";
 import axios from "axios";
+import MuxPlayer from "@mux/mux-player-react"
 
 
 import { Button } from "@/components/ui/button";
@@ -70,7 +71,7 @@ export const ChapterVideoForm = ({ initialData, courseId, chapterId }: ChapterVi
           </div>
         ) : (
           <div className="relative aspect-video mt-2">
-           Video uploaded!
+            <MuxPlayer playbackId={initialData?.muxData?.playbackId || ""} />
           </div>
         ))}
 
