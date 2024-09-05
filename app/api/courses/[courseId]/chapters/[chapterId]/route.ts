@@ -14,11 +14,11 @@ const { video } = new Mux(
 export async function DELETE(
   req: Request,
   { params }: { params: { courseId: string; chapterId: string } }
-) { 
+) {
   try {
-    const {userId} = auth()
+    const { userId } = auth();
 
-    if(!userId) {
+    if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
@@ -33,40 +33,45 @@ export async function DELETE(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const chapter = await db.chapter.delete({
+    const chapter = await db.chapter.findUnique({
       where: {
         id: params.chapterId,
-        courseId: params.courseId,
       },
     });
 
-    if(!chapter) {
+    if (!chapter || chapter.courseId !== params.courseId) {
       return new NextResponse("Not Found", { status: 404 });
     }
 
     if (chapter.videoUrl) {
-    const existingMuxData = await db.muxData.findFirst({ where: { chapterId: params.chapterId } });
+      const existingMuxData = await db.muxData.findFirst({
+        where: { chapterId: params.chapterId },
+      });
 
-      if(existingMuxData) {
-        await video.assets.delete(existingMuxData.assetId)
-        await db.muxData.delete({ where: { id: existingMuxData.id } })
+      if (existingMuxData) {
+        try {
+          await video.assets.delete(existingMuxData.assetId);
+          await db.muxData.delete({ where: { id: existingMuxData.id } });
+        } catch (muxError) {
+          console.error("Error deleting Mux asset:", muxError);
+        }
       }
     }
-  
+
     const deletedChapter = await db.chapter.delete({
       where: {
         id: params.chapterId,
-      }
-    })
+      },
+    });
 
     const publishedChapters = await db.chapter.findMany({
       where: {
         courseId: params.courseId,
         isPublished: true,
-      }
+      },
     });
 
-    if(!publishedChapters.length) {
+    if (!publishedChapters.length) {
       await db.course.update({
         where: {
           id: params.courseId,
@@ -78,14 +83,11 @@ export async function DELETE(
     }
 
     return NextResponse.json(deletedChapter);
-    
-  }catch (error) {
+  } catch (error) {
     console.log("[CHAPTERS_ID_ERROR]", error);
-
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
-
 
 export async function PATCH(
   req: Request,
