@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { ConfirmModal } from "@/components/modals/confirm-modal";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-
 interface ChapterActionsProps {
   disabled: boolean;
   courseId: string;
@@ -16,19 +15,42 @@ interface ChapterActionsProps {
   isPublished: boolean;
 }
 
-
 const ChapterActions = ({
   disabled,
   courseId,
   chapterId,
-  isPublished
+  isPublished,
 }: ChapterActionsProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
+  const onPublish = async () => {
+    try {
+      setIsLoading(true);
+
+      if (isPublished) {
+        await axios.patch(
+          `/api/courses/${courseId}/chapters/${chapterId}/unpublish`
+        );
+        toast.success("Chapter unpublished");
+      } else {
+        await axios.patch(
+          `/api/courses/${courseId}/chapters/${chapterId}/publish`
+        );
+        toast.success("Chapter published");
+      }
+
+      router.push(`/teacher/courses/${courseId}`);
+    } catch (error) {
+      toast.error("Something went wrong");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const onDelete = async () => {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       await axios.delete(`/api/courses/${courseId}/chapters/${chapterId}`, {
         method: "DELETE",
       });
@@ -36,16 +58,16 @@ const ChapterActions = ({
       router.refresh();
       router.push(`/teacher/courses/${courseId}`);
     } catch (error) {
-      toast.error("Something went wrong")
+      toast.error("Something went wrong");
     } finally {
-      setIsLoading(false)
-     }
-  }
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="flex items-center gap-x-2">
       <Button
-        onClick={() => {}}
+        onClick={onPublish}
         disabled={disabled || isLoading}
         variant="outline"
         size="sm"
@@ -60,6 +82,6 @@ const ChapterActions = ({
       </ConfirmModal>
     </div>
   );
-}
+};
 
-export default ChapterActions
+export default ChapterActions;
