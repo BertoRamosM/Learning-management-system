@@ -14,11 +14,7 @@ interface ActionsProps {
   isPublished: boolean;
 }
 
-const Actions = ({
-  disabled,
-  courseId,
-  isPublished,
-}: ActionsProps) => {
+const Actions = ({ disabled, courseId, isPublished }: ActionsProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -27,9 +23,7 @@ const Actions = ({
       setIsLoading(true);
 
       if (isPublished) {
-        await axios.patch(
-          `/api/courses/${courseId}/unpublish`
-        );
+        await axios.patch(`/api/courses/${courseId}/unpublish`);
         toast.success("Course unpublished");
       } else {
         await axios.patch(`/api/courses/${courseId}/publish`);
