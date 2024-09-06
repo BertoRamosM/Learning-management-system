@@ -50,9 +50,9 @@ export const columns: ColumnDef<Course>[] = [
       const price = parseFloat(row.getValue("price") || "0");
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
-        currency: "USD",
+        currency: "EUR",
       }).format(price)
-      return <span>${formatted}</span>;
+      return <span>{formatted}</span>;
     }
   },
   {
@@ -99,10 +99,10 @@ export const columns: ColumnDef<Course>[] = [
               </DropdownMenuItem>
             </Link>
 
-            <DropdownMenuItem onClick={() => console.log("Delete")}>
+           {/*  <DropdownMenuItem onClick={() => console.log("Delete")}>
               <Trash className="mr-2 h-4 w-4" />
               Delete
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>
       );
