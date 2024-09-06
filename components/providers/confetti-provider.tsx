@@ -3,7 +3,7 @@
 import ReactConfetti from "react-confetti"
 import { useConfettiStore } from "../../hooks/use-confetti-store"
 
-export const ConfettiProvider = ({ children }: { children: React.ReactNode }) => {
+export const ConfettiProvider = () => {
   const confetti = useConfettiStore()
 
   if (!confetti.isOpen)return null
