@@ -1,7 +1,6 @@
 "use client"
 
 import { Category } from "@prisma/client"
-
 import {
   FcEngineering,
   FcFilmReel,
@@ -32,6 +31,8 @@ const iconMap: Record<Category["name"], IconType> = {
 
 const Categories = ({items}:CategoriesProps) => {
 
+
+  
 
   return (
     <div className="flex items-center gap-x-2 overflow-x-auto pb-2">
