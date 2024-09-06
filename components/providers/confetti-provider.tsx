@@ -10,9 +10,12 @@ export const ConfettiProvider = () => {
 
   return (
     <ReactConfetti
-      className="pointer-events-none z-100"
+      className="pointer-events-none z-100 w-screen h-screen fixed top-0 left-0"
       numberOfPieces={500}
       recycle={false}
+      run={true}
+      width={window.innerWidth}
+      height={window.innerHeight}
       onConfettiComplete={confetti.onClose}
     />
   ) 
