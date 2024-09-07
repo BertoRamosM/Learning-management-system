@@ -1,4 +1,5 @@
 import { Category, Course } from "@prisma/client";
+import CourseCard from "./CourseCard";
 
 interface CoursesWithProgressWithCategory extends Course {
   category: Category | null;
@@ -7,7 +8,7 @@ interface CoursesWithProgressWithCategory extends Course {
 }
 
 interface CoursesListProps {
-  courses: CoursesWithProgressWithCategory[]; // Correctly typed courses
+  courses: CoursesWithProgressWithCategory[]; 
 }
 
 const CoursesList = ({ courses }: CoursesListProps) => {
@@ -16,7 +17,7 @@ const CoursesList = ({ courses }: CoursesListProps) => {
       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4">
         {courses.map((item) => (
           <CourseCard key={item.id} id={item.id}
-          title={item.title} imageUrl={item.imageUrl} chaptersLength={item.chapters.length} price={item.price} progress={item.progress} category={item?.category?.name} />
+          title={item.title} imageUrl={item.imageUrl!} chaptersLength={item.chapters.length} price={item.price!} progress={item.progress} category={item?.category?.name!} />
         ))}
       </div>
       {courses.length === 0 && (
