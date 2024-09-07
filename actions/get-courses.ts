@@ -1,30 +1,32 @@
 import { Category, Course } from "@prisma/client";
-import { GetProgress } from "./get-progess";
+
 
 import { db } from "@/lib/db";
+import { GetProgress } from "./get-progess";
 
 type CourseWithProgressWithCategories = Course & {
-  category: Category || null;
-  chapters: { id: string } [];
-progress: number || null;
-}
+  category: Category | null;
+  chapters: { id: string }[];
+  progress: number | null;
+};
 
-type GetCourses = {
-  userId: string
-  title?: string
-  categoryId?: string
-}
+type GetCoursesParams = {
+  userId: string;
+  title?: string;
+  categoryId?: string;
+};
 
-export const GetCourses = async ({ userId, title, categoryId }: GetCourses): Promise<CourseWithProgressWithCategories[]> => {
-
+export const GetCourses = async ({
+  userId,
+  title,
+  categoryId,
+}: GetCoursesParams): Promise<CourseWithProgressWithCategories[]> => {
   try {
     const courses = await db.course.findMany({
       where: {
         isPublished: true,
-        title: {
-          contains: title,
-        },
-        categoryId
+        title: title ? { contains: title } : undefined,
+        categoryId,
       },
       include: {
         category: true,
@@ -34,22 +36,32 @@ export const GetCourses = async ({ userId, title, categoryId }: GetCourses): Pro
           },
           select: {
             id: true,
-          }
+          },
         },
-          purchases: {
-            where: {
-              userId
-            }
-          }
+        purchases: {
+          where: {
+            userId,
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",
-      }
-      
-    })
-    
-  }catch (error) {
+      },
+    });
+
+    const coursesWithProgress = await Promise.all(
+      courses.map(async (course) => {
+        const progress = await GetProgress(course.id, userId); 
+        return {
+          ...course,
+          progress,
+        };
+      })
+    );
+
+    return coursesWithProgress;
+  } catch (error) {
     console.log("GetCourses error", error);
     return [];
   }
- }
+};
