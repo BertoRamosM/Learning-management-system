@@ -1,9 +1,16 @@
-import { Course } from "@prisma/client";
 import { db } from "@/lib/db";
 import { GetProgress } from "./get-progess";
+import { Prisma } from "@prisma/client"; // Import Prisma
 
-type CourseWithProgress = Course & {
-  progress: number | null;
+type CourseWithProgressWithCategory = Prisma.CourseGetPayload<{
+  include: {
+    category: true;
+    chapters: {
+      select: { id: true };
+    };
+  };
+}> & {
+  progress: number | null; // Add progress field
 };
 
 type GetCoursesParams = {
@@ -16,44 +23,37 @@ export const GetCourses = async ({
   userId,
   title,
   categoryId,
-}: GetCoursesParams): Promise<CourseWithProgress[]> => {
+}: GetCoursesParams): Promise<CourseWithProgressWithCategory[]> => {
   try {
-    let courses: Course[] = [];
-
-    // If a title is provided, use full-text search with raw SQL
-    if (title) {
-      courses = await db.$queryRaw<Course[]>`
-        SELECT * FROM "Course"
-        WHERE "isPublished" = true
-        AND (${categoryId ? `"categoryId" = ${categoryId}` : "true"})
-        AND to_tsvector('english', "title") @@ plainto_tsquery('english', ${title})
-        ORDER BY "createdAt" DESC
-      `;
-    } else {
-      // If no title is provided, fallback to normal findMany query
-      courses = await db.course.findMany({
-        where: {
-          isPublished: true,
-          categoryId,
+    let courses = await db.course.findMany({
+      where: {
+        isPublished: true,
+        categoryId,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        category: true, // Include the category relation
+        chapters: {
+          // Include chapters relation
+          select: { id: true }, // Only get the chapter ids
         },
-        orderBy: {
-          createdAt: "desc",
-        },
-      });
-    }
+      },
+    });
 
-    // Map through the courses and add the progress for each course
+    // Add progress to each course
     const coursesWithProgress = await Promise.all(
       courses.map(async (course) => {
-        const progress = await GetProgress(course.id, userId); // Fetch user progress
+        const progress = await GetProgress(course.id, userId); // Fetch progress
         return {
           ...course,
-          progress,
+          progress, // Add the progress field to the course
         };
       })
     );
 
-    return coursesWithProgress; // Return courses with progress
+    return coursesWithProgress;
   } catch (error) {
     console.error("GetCourses error", error);
     return [];

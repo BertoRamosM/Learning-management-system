@@ -4,8 +4,19 @@ import Categories from './_components/Categories'
 import SearchInput from '@/components/search-input'
 import { auth } from '@clerk/nextjs/server'
 import { redirect, useSearchParams } from 'next/navigation'
+import { GetCourses } from '@/actions/get-courses'
+import CoursesList from '@/components/CoursesList'
 
-const SearchPage = async () => {
+interface SearchPageProps {
+  searchParams: {
+    title: string;
+    categoryId: string;
+  }
+}
+
+const SearchPage = async ({
+  searchParams
+}: SearchPageProps) => {
 
   const { userId } = auth()
   if(!userId) {
@@ -20,8 +31,7 @@ const SearchPage = async () => {
 
   const courses = await GetCourses({
     userId: userId,
-    title: useSearchParams.get('title'),
-    categoryId: searchParams.get('categoryId')
+    ...searchParams,
   })
 
 
@@ -33,6 +43,7 @@ const SearchPage = async () => {
       </div>
       <div className="p-6">
         <Categories items={catgories} />
+        <CoursesList courses={courses} />
       </div>
     </>
   );
