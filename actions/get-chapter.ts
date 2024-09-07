@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { Attachment, Chapter } from "@prisma/client";
 
 interface getChapterProps {
   userId: string;
@@ -12,23 +13,104 @@ export const GetChapter = async ({
   chapterId,
 }: getChapterProps) => {
   try {
-    const chapter = await db.chapter.findUnique({
+    const purchase = await db.purchase.findUnique({
       where: {
-        id: chapterId,
-        courseId: courseId,
-      },
-      include: {
-        muxData: true,
+        userId_courseId: {
+          userId,
+          courseId,
+        },
       },
     });
 
-    if (!chapter || chapter.courseId !== courseId) {
-      return null;
+    const course = await db.course.findUnique({
+      where: {
+        isPublished: true,
+        id: courseId,
+      },
+      select: {
+        price: true,
+      },
+    });
+
+    const chapter = await db.chapter.findUnique({
+      where: {
+        id: chapterId,
+        isPublished: true,
+      },
+    });
+
+    if (!chapter || !course) {
+      throw new Error("Chapter not found");
     }
 
-    return chapter;
+    let muxData = null;
+    let attachments: Attachment[] = [];
+    let nextChapter: Chapter | null = null;
+
+    if (purchase) {
+      attachments = await db.attachment.findMany({
+        where: {
+          courseId: courseId,
+        },
+      });
+    }
+
+    if (chapter.isFree || purchase) {
+      muxData = await db.muxData.findUnique({
+        where: {
+          chapterId: chapterId,
+        },
+      })
+
+
+      nextChapter = await db.chapter.findFirst({
+        where: {
+          courseId: courseId,
+          isPublished: true,
+          position: {
+            gt: chapter?.position,
+          },
+        },
+        orderBy: {
+          position: "asc",
+        },
+      })
+    }
+
+   const userProgress = await db.userProgress.findUnique({
+     where: {
+       userId_chapterId: {
+         userId: userId,
+         chapterId: chapterId,
+       },
+     },
+   });
+
+
+    return {
+      chapter,
+      course,
+      muxData,
+      attachments,
+      nextChapter,
+      userProgress,
+      purchase,
+    }
+     
+
+
+
+
   } catch (error) {
     console.log("GetChapter error", error);
-    return null;
+    return {
+      chapter: null,
+      course: null,
+      muxData: null,
+      attachments: [],
+      nextChapter: null,
+      userProgress: null,
+      purchase: null,
+    };
   }
 };
