@@ -1,4 +1,7 @@
-import React from 'react'
+'use client'
+
+import { CheckCircle, Lock, PlayCircle } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 
 interface CourseSidebarItemProps {
   id: string;
@@ -16,8 +19,21 @@ const CourseSidebarItem = ({
   isLoked
 }: CourseSidebarItemProps) => {
 
+  const pathname = usePathname()
+  const router = useRouter()
+
+  const Icon = isLoked ? Lock : (isCompleted ? CheckCircle : PlayCircle)
+
+  const isActive = pathname.includes(id)
+
+  const onClick = () => {
+    router.push(`/courses/${courseId}/chapters/${id}`)
+}
+
   return (
-    <div>CourseSidebarItem</div>
+    <div>
+
+    </div>
   )
 }
 
