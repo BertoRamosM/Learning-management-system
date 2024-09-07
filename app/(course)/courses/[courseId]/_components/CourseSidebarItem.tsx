@@ -1,5 +1,6 @@
 'use client'
 
+import { cn } from "@/lib/utils";
 import { CheckCircle, Lock, PlayCircle } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -31,10 +32,17 @@ const CourseSidebarItem = ({
 }
 
   return (
-    <div>
-
-    </div>
-  )
+    <button type="button"
+      className={cn("flex items-center gap-x-2 text-slate-500 text-sm font-[500] pl-6 transition-all hover:text-slate-600 hover:bg-slate-300/20",
+        isActive && "bg-slate-200/20 text-slate-700 hover:bg-slate-200/20 hover:text-slate-700", isCompleted && "text-emerald-700 hover:text-emerald-700",
+        isCompleted && isActive && "bg-emerald-200/20"
+    )} onClick={onClick}>
+      <div className="flex items-center gap-x-2 justify-center">
+        <Icon />
+        {label}
+      </div>
+    </button>
+  );
 }
 
 export default CourseSidebarItem
