@@ -31,6 +31,8 @@ const VideoPlayer = ({
   const router = useRouter()
   const confetti = useConfettiStore()
 
+  const [isReady, setIsReady] = useState(false)
+
   const [isLoading, setIsLoading] = useState(false)
 
   const onPlaybackReady = async () => {
@@ -48,7 +50,20 @@ const VideoPlayer = ({
     }
   }
   return (
-    <div>VideoPayer</div>
+    <div className="relative aspect-video">
+      {!isReady && !isLocked && (
+        <div className="absolute inset-0 flex items-center justify-center bg-slate-800">
+          <Loader2 className="h-8 w-8 animate-spin text-secondary" />
+        </div>
+)}
+
+      {isLocked && (
+        <div className="absolute inset-0 flex items-center justify-center bg-slate-800 flex-col gap-y-2 text-secondary">
+          <Lock className="h-8 w-8 text-secondary" />
+        <p className="text-sm">This chapter is locked for preview</p>
+        </div>
+      )}
+    </div>
   )
 }
 
